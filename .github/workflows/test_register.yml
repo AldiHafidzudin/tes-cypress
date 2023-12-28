@@ -1,0 +1,29 @@
+name: Magento - Register
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # Penjadwalan setiap jam 8 pagi
+  workflow_dispatch:  # Menambahkan kunci workflow_dispatch
+
+jobs:
+  run_selenium1:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Cypress run Saucedemo
+        uses: cypress-io/github-action@v6
+        with:
+          browser: chrome
+          spec: cypress/e2e/magento/registrasi.cy.js
+      - uses: actions/upload-artifact@v3
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-videos
+          path: cypress/videos
